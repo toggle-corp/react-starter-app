@@ -1,0 +1,25 @@
+:root {
+    --width-message-max: 540px;
+}
+
+.four-hundred-three {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: var(--height-content);
+    line-height: 2;
+
+    .heading {
+        color: var(--color-danger);
+        font-size: var(--font-size-super-large-alt);
+        font-weight: var(--font-weight-bold);
+    }
+
+    .message {
+        margin: var(--spacing-large) 0;
+        max-width: var(--width-message-max);
+        text-align: center;
+        font-size: var(--font-size-large-alt);
+    }
+}

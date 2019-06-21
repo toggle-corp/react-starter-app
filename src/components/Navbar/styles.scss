@@ -1,0 +1,58 @@
+@import '~base-scss/utils';
+
+.navbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: var(--width-separator-thin) solid var(--color-separator);
+    background-color: var(--color-foreground);
+    width: 100%;
+    height: var(--height-navbar);
+
+    .menu {
+        display: flex;
+        flex-direction: row;
+        overflow-y: auto;
+
+        .menu-items {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+
+            .menu-item {
+                @include transition-medium;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                border-bottom: var(--width-separator-medium) solid transparent;
+                background-color: var(--color-foreground);
+                cursor: pointer;
+                padding: var(--spacing-medium) var(--spacing-small);
+                text-decoration: none;
+                color: var(--color-text-label);
+
+                .menu-title {
+                    @include transition-medium;
+                    text-align: center;
+                    font-size: var(--font-size-large);
+                    font-weight: var(--font-weight-bold);
+                }
+
+                &:hover {
+                    color: var(--color-text);
+                }
+
+                &.active {
+                    border-bottom-color: var(--color-accent);
+                    color: var(--color-accent);
+                }
+
+                &.disabled {
+                    opacity: .5;
+                    color: var(--color-text-disabled);
+                }
+            }
+        }
+    }
+}

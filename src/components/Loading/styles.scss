@@ -1,0 +1,19 @@
+.loading {
+    display: flex;
+    position: absolute;
+    top: var(--spacing-medium);
+    left: 50%;
+    align-items: center;
+    transform: translateX(-50%);
+    z-index: 1;
+    border: var(--width-separator-thin) solid var(--color-separator-light);
+    border-radius: 5px;
+    background-color: var(--color-foreground);
+    padding: var(--spacing-medium);
+    text-align: center;
+    font-size: var(--font-size-large);
+
+    .spinner {
+        margin-right: 6px;
+    }
+}
