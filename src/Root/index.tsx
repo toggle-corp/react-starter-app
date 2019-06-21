@@ -30,6 +30,8 @@ Object.keys(iconNames).forEach((key) => {
 /* Loads redux into memory */
 /* Create redux context */
 export default class Root extends React.Component<Props, State> {
+    private store: Store<AppState>;
+
     public constructor(props: Props) {
         super(props);
 
@@ -43,7 +45,6 @@ export default class Root extends React.Component<Props, State> {
         console.info('React version:', React.version);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public componentDidMount() {
         // NOTE: We can also use PersistGate instead of callback to wait for rehydration
         persistStore(this.store, undefined, this.setRehydrated);
@@ -53,9 +54,6 @@ export default class Root extends React.Component<Props, State> {
         this.setState({ rehydrated: true });
     }
 
-    private store: Store<AppState>;
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {
         const { rehydrated } = this.state;
 

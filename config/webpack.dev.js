@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const dotenv = require('dotenv').config({
     path: '.env',
 });
@@ -100,9 +100,10 @@ module.exports = (env) => {
                             loader: require.resolve('css-loader'),
                             options: {
                                 importLoaders: 1,
-                                modules: true,
-                                camelCase: true,
-                                localIdentName: '[name]_[local]_[hash:base64]',
+                                modules: {
+                                    localIdentName: '[name]_[local]_[hash:base64]',
+                                },
+                                localsConvention: 'camelCase',
                                 sourceMap: true,
                             },
                         },
@@ -137,7 +138,7 @@ module.exports = (env) => {
                 allowAsyncCycles: false,
                 cwd: appBase,
             }),
-            new CleanWebpackPlugin([appDist], { root: appBase }),
+            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',

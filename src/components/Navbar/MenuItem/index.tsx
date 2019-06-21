@@ -14,14 +14,21 @@ interface Props {
 
 class MenuItem extends React.PureComponent<Props> {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private getProps = ({ isCurrent }: { isCurrent: boolean }) => ({
-        className: _cs(
-            this.props.className,
-            styles.menuItem,
-            isCurrent && styles.active,
-            this.props.disabled && styles.disabled,
-        ),
-    });
+    private getProps = ({ isCurrent }: { isCurrent: boolean }) => {
+        const {
+            className,
+            disabled,
+        } = this.props;
+
+        return {
+            className: _cs(
+                className,
+                styles.menuItem,
+                isCurrent && styles.active,
+                disabled && styles.disabled,
+            ),
+        };
+    };
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {

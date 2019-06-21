@@ -114,6 +114,7 @@ interface Props {
 }
 
 class Multiplexer extends React.PureComponent<Props, State> {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     private renderRoutes = () => {
         const { pending } = this.props;
         if (pending) {
@@ -137,7 +138,7 @@ class Multiplexer extends React.PureComponent<Props, State> {
         return (
             <Fragment>
                 <Navbar />
-                <div className={_cs(styles.appMainContent, 'app-main-content')} >
+                <div className={_cs(styles.appMainContent, 'app-main-content')}>
                     {this.renderRoutes()}
                 </div>
             </Fragment>

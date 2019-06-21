@@ -1,6 +1,9 @@
 # TODO
 
-0. Style error message and loading message
+0. Style message
+    - Loading
+    - 404
+    - 403
 1. Fix styling config
 
 2. Create small redux persistoid

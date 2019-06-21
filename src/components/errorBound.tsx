@@ -7,7 +7,6 @@ interface Handler {
 
 type Comp<P> = (React.ComponentType<P> | React.SFC<P>) & Handler;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function unnamed<P>(ErrorComponent: Comp<P>) {
     return (WrappedComponent: React.ComponentType<P>) => {
         interface State {
@@ -23,7 +22,6 @@ export default function unnamed<P>(ErrorComponent: Comp<P>) {
                 };
             }
 
-            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
             public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
                 this.setState({ hasError: true });
 
@@ -32,11 +30,11 @@ export default function unnamed<P>(ErrorComponent: Comp<P>) {
                 }
             }
 
-            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
             public render() {
                 const { ...otherProps } = this.props;
 
-                if (!this.state.hasError) {
+                const { hasError } = this.state;
+                if (!hasError) {
                     return (
                         <WrappedComponent {...otherProps} />
                     );

@@ -4,7 +4,6 @@ import {
     isList,
 } from '@togglecorp/fujs';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const forEach = (obj: object, func: (key: string, val: any) => void) => {
     Object.keys(obj).forEach((key) => {
         const val = (obj as any)[key];

@@ -9,7 +9,6 @@ interface Props {
     text: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const Loading = ({ pending, text }: Props) => {
     if (!pending) {
         return null;

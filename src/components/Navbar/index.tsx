@@ -24,7 +24,6 @@ class Navbar extends React.PureComponent<Props> {
         disabled: data.disabled,
     });
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {
         const {
             className: classNameFromProps,

@@ -119,11 +119,10 @@ const requests: { [key: string]: ClientAttributes<ReduxProps, Params> } = {
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Dashboard extends React.PureComponent<Props, State> {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {
         return (
-            <div className={styles.orange} >
-                <Message className={styles.message} >
+            <div className={styles.orange}>
+                <Message className={styles.message}>
                     <Icon
                         className={styles.icon}
                         name="orange"
