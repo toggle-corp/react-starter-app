@@ -18,5 +18,5 @@ while true; do
 done
 
 echo "Creating project '$project_name'"
-git grep -l __APP_ID__ | xargs sed -i "s/__APP_ID__/$project_id/g"
-git grep -l __APP_NAME__ | xargs sed -i "s/__APP_ID__/$project_name/g"
+git grep -l __APP_ID__ -- :^setup.sh | xargs sed -i "s/__APP_ID__/$project_id/g"
+git grep -l __APP_NAME__ -- :^setup.sh | xargs sed -i "s/__APP_NAME__/$project_name/g"
