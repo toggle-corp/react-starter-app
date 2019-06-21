@@ -109,11 +109,12 @@ module.exports = (env) => {
                             loader: require.resolve('css-loader'),
                             options: {
                                 importLoaders: 1,
-                                modules: true,
-                                camelCase: true,
-                                localIdentName: '[name]_[local]_[hash:base64]',
-                                minimize: true,
+                                modules: {
+                                    localIdentName: '[name]_[local]_[hash:base64]',
+                                },
+                                localsConvention: 'camelCase',
                                 sourceMap: true,
+                                minimize: true,
                             },
                         },
                         {
@@ -147,7 +148,7 @@ module.exports = (env) => {
                 allowAsyncCycles: false,
                 cwd: appBase,
             }),
-            new CleanWebpackPlugin([appDist], { root: appBase }),
+            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',
