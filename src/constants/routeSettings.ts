@@ -1,5 +1,3 @@
-import iconNames from './iconNames';
-
 export interface Route {
     path: string;
     name: string;
@@ -17,6 +15,10 @@ export interface FallbackRoute {
     name: string;
     load: any;
     path: undefined;
+}
+
+export function hasNavbar(route: SomeRoute): route is NavbarRoute {
+    return !!(route as NavbarRoute).navbar;
 }
 
 export type SomeRoute = Route | NavbarRoute | FallbackRoute;

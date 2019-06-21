@@ -1,11 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Spinner from '#rscv/Spinner';
 
 import styles from './styles.scss';
 
-const Loading = ({ pending, text }) => {
+interface Props {
+    pending: boolean;
+    text: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const Loading = ({ pending, text }: Props) => {
     if (!pending) {
         return null;
     }
@@ -16,11 +21,6 @@ const Loading = ({ pending, text }) => {
             {text}
         </div>
     );
-};
-
-Loading.propTypes = {
-    pending: PropTypes.bool,
-    text: PropTypes.string,
 };
 
 Loading.defaultProps = {
