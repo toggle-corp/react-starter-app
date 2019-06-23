@@ -1,7 +1,4 @@
-@import '~base-scss/utils';
-
 .menu-item {
-    @include transition-medium;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -14,7 +11,6 @@
     color: var(--color-text-label);
 
     .menu-title {
-        @include transition-medium;
         text-align: center;
         font-size: var(--font-size-large);
         font-weight: var(--font-weight-bold);
@@ -30,7 +26,6 @@
     }
 
     &.disabled {
-        opacity: .5;
         color: var(--color-text-disabled);
     }
 }

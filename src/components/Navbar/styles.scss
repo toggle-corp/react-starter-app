@@ -1,13 +1,8 @@
-@import '~base-scss/utils';
-
 .navbar {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    border-bottom: var(--width-separator-thin) solid var(--color-separator);
     background-color: var(--color-foreground);
-    width: 100%;
-    height: var(--height-navbar);
 
     .menu {
         display: flex;
