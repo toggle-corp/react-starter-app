@@ -1,3 +1,28 @@
+* {
+    box-sizing: border-box;
+}
+
+:global {
+    .portal-child-shown {
+        overflow: hidden;
+
+        #root {
+            filter: brightness(50%);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .focus-trap-wrapper {
+            .focus-trap {
+                .modal:not([data-last-modal="true"]) {
+                    filter: brightness(50%);
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -38,42 +63,51 @@ body {
     ::-webkit-scrollbar-thumb {
         background-color: var(--color-foreground-scrollbar);
     }
-}
 
-.app-main-content {
-    background-color: var(--color-foreground);
-}
+    .multiplexer {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
 
-
-:root {
-    --font-family-sans-serif: 'Source Sans Pro', sans-serif;
-    --font-family-heading: 'Source Sans Pro', sans-serif;
-    --font-family-monospace: 'Oxygen Mono', monospace;
-    --font-family-icons: 'Ionicons';
-    --font-weight-heading: 500;
-}
-
-:global {
-    .portal-child-shown {
-        overflow: hidden;
-
-        #root {
-            filter: brightness(50%);
-            pointer-events: none;
-            user-select: none;
+        .navbar {
+            flex-shrink: 0;
         }
 
-        .focus-trap-wrapper {
-            .focus-trap {
-                .modal:not([data-last-modal="true"]) {
-                    filter: brightness(50%);
-                    pointer-events: none;
+        .app-main-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: var(--color-foreground);
+
+            .loading {
+                flex-grow: 1;
+                color: var(--root-preload-text-color);
+                font-size: var(--root-text-font-size);
+            }
+
+            .router {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .page-error,
+                .retryable-page-error {
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    justify-content: center;
+
+                    .message {
+                        padding: var(--spacing-small);
+                        text-align: center;
+                    }
+
+                    .reload-button {
+                        margin: var(--spacing-small);
+                    }
                 }
             }
         }
     }
-}
-
-* {
-    box-sizing: border-box;
 }

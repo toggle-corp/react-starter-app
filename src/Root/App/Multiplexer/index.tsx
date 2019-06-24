@@ -1,5 +1,5 @@
 import Loadable from 'react-loadable';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Router } from '@reach/router';
 import { _cs } from '@togglecorp/fujs';
 
@@ -13,26 +13,6 @@ import helmetify from '#components/helmetify';
 import { routeSettings } from '#constants';
 import styles from './styles.scss';
 
-// LOADING
-const loadingStyle: React.CSSProperties = {
-    zIndex: 1111,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    // width: '300px',
-    // height: '60px',
-    display: 'flex',
-    padding: 10,
-    textAlign: 'center',
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    fontSize: '18px',
-    backgroundColor: '#ffffff',
-    border: '1px solid rgba(255, 0, 0, 0.2)',
-    borderRadius: '3px',
-};
-
 interface LoadOptions {
     error: string;
     retry: () => void;
@@ -44,9 +24,12 @@ function reloadPage(): void {
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const ErrorInPage = () => (
-    <div style={loadingStyle}>
-        Some problem occured.
+    <div className={styles.pageError}>
+        <div className={styles.message}>
+            Some problem occured.
+        </div>
         <DangerButton
+            className={styles.reloadButton}
             transparent
             onClick={reloadPage}
         >
@@ -59,9 +42,12 @@ const ErrorInPage = () => (
 const RetryableErrorInPage = ({ error, retry }: LoadOptions) => {
     console.error(error);
     return (
-        <div style={loadingStyle}>
-            Some problem occured.
+        <div className={styles.retryablePageError}>
+            <div className={styles.message}>
+                Some problem occured.
+            </div>
             <DangerButton
+                className={styles.reloadButton}
                 onClick={retry}
                 transparent
             >
@@ -81,8 +67,10 @@ const LoadingPage = ({ error, retry }: LoadOptions) => {
             />
         );
     }
+
     return (
         <Loading
+            className={styles.loading}
             text="Loading Page"
             pending
         />
@@ -111,6 +99,7 @@ interface State {
 }
 interface Props {
     pending: boolean;
+    className?: string;
 }
 
 class Multiplexer extends React.PureComponent<Props, State> {
@@ -127,7 +116,7 @@ class Multiplexer extends React.PureComponent<Props, State> {
         }
 
         return (
-            <Router>
+            <Router className={styles.router}>
                 {routes}
             </Router>
         );
@@ -135,13 +124,15 @@ class Multiplexer extends React.PureComponent<Props, State> {
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {
+        const { className } = this.props;
+
         return (
-            <Fragment>
-                <Navbar />
+            <div className={_cs(styles.multiplexer, className, 'multiplexer')}>
+                <Navbar className={styles.navbar} />
                 <div className={_cs(styles.appMainContent, 'app-main-content')}>
                     {this.renderRoutes()}
                 </div>
-            </Fragment>
+            </div>
         );
     }
 }
