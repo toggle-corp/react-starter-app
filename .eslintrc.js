@@ -67,6 +67,7 @@ module.exports = {
         'react/jsx-filename-extension': ['error', {'extensions': ['.js', '.jsx', '.ts', '.tsx'] }],
         'react/prop-types': [1, { 'ignore': [], 'customValidators': [], 'skipUndeclared': false }],
         'react/forbid-prop-types': [1],
+        'react/destructuring-assignment': [1, "always", { "ignoreClassFields": true }],
 
         'jsx-a11y/anchor-is-valid': [ 'error', {
             'components': [ 'Link' ],
