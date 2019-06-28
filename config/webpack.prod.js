@@ -5,7 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const dotenv = require('dotenv').config({
     path: '.env',
 });
@@ -27,8 +28,8 @@ module.exports = (env) => {
         output: {
             path: appDist,
             publicPath: '/',
-            chunkFilename: 'js/[name].[chunkhash].js',
-            filename: 'js/[name].[chunkhash].js',
+            chunkFilename: 'js/[name].s/chunkhash].js',
+            filename: 'js/[name].[contenthash].js',
             sourceMapFilename: 'sourcemaps/[file].map',
         },
 
@@ -50,10 +51,21 @@ module.exports = (env) => {
 
         optimization: {
             minimizer: [
+                /*
+                // NOTE: Using TerserPlugin instead of UglifyJsPlugin as es6 support deprecated
                 new UglifyJsPlugin({
                     sourceMap: true,
                     parallel: true,
                     uglifyOptions: {
+                        mangle: true,
+                        compress: { typeofs: false },
+                    },
+                }),
+                */
+                new TerserPlugin({
+                    parallel: true,
+                    sourceMap: true,
+                    terserOptions: {
                         mangle: true,
                         compress: { typeofs: false },
                     },
@@ -73,7 +85,7 @@ module.exports = (env) => {
                     },
                 },
             },
-            runtimeChunk: true,
+            runtimeChunk: 'single',
         },
 
         module: {
@@ -87,6 +99,9 @@ module.exports = (env) => {
                             loader: 'eslint-loader',
                             options: {
                                 configFile: eslintFile,
+                                // NOTE: adding this because eslint 6 cannot find this
+                                // https://github.com/webpack-contrib/eslint-loader/issues/271
+                                formatter: require('eslint/lib/cli-engine/formatters/stylish'),
                             },
                         },
                     ],
@@ -104,7 +119,12 @@ module.exports = (env) => {
                     test: /\.scss$/,
                     include: appSrc,
                     use: [
-                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                hmr: process.env.NODE_ENV === 'development',
+                            },
+                        },
                         {
                             loader: require.resolve('css-loader'),
                             options: {
@@ -114,7 +134,6 @@ module.exports = (env) => {
                                 },
                                 localsConvention: 'camelCase',
                                 sourceMap: true,
-                                minimize: true,
                             },
                         },
                         {
@@ -160,6 +179,7 @@ module.exports = (env) => {
                 filename: 'css/[name].css',
                 chunkFilename: 'css/[id].css',
             }),
+            new webpack.HashedModuleIdsPlugin(),
         ],
     };
 };
