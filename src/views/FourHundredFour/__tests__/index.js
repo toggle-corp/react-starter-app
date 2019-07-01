@@ -2,7 +2,7 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
-import FourHundredFour from '../';
+import FourHundredFour from '../index';
 
 const initialState = {
 };
