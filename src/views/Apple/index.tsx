@@ -127,7 +127,7 @@ class Apple extends React.PureComponent<Props, State> {
                         className={styles.icon}
                         name="apple"
                     />
-                    Balls go here
+                    Apples go here
                 </Message>
             </div>
         );

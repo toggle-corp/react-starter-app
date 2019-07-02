@@ -3,7 +3,9 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const StylishPlugin = require('eslint/lib/cli-engine/formatters/stylish');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const dotenv = require('dotenv').config({
     path: '.env',
 });
@@ -85,7 +87,7 @@ module.exports = (env) => {
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
-                                formatter: require('eslint/lib/cli-engine/formatters/stylish'),
+                                formatter: StylishPlugin,
                             },
                         },
                     ],
@@ -148,6 +150,8 @@ module.exports = (env) => {
                 allowAsyncCycles: false,
                 cwd: appBase,
             }),
+            // Remove build folder anyway
+            new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',

@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const StylishPlugin = require('eslint/lib/cli-engine/formatters/stylish');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const dotenv = require('dotenv').config({
@@ -86,6 +87,7 @@ module.exports = (env) => {
                 },
             },
             runtimeChunk: 'single',
+            moduleIds: 'hashed',
         },
 
         module: {
@@ -101,7 +103,7 @@ module.exports = (env) => {
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
-                                formatter: require('eslint/lib/cli-engine/formatters/stylish'),
+                                formatter: StylishPlugin,
                             },
                         },
                     ],
@@ -119,12 +121,7 @@ module.exports = (env) => {
                     test: /\.scss$/,
                     include: appSrc,
                     use: [
-                        {
-                            loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                hmr: process.env.NODE_ENV === 'development',
-                            },
-                        },
+                        MiniCssExtractPlugin.loader,
                         {
                             loader: require.resolve('css-loader'),
                             options: {

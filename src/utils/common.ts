@@ -4,7 +4,7 @@ import {
     isList,
 } from '@togglecorp/fujs';
 
-export const forEach = (obj: object, func: (key: string, val: any) => void) => {
+export const forEach = (obj: object, func: (key: string, val: unknown) => void) => {
     Object.keys(obj).forEach((key) => {
         const val = (obj as any)[key];
         func(key, val);
@@ -17,7 +17,8 @@ export const sanitizeResponse = (data: unknown): any => {
     }
     if (isList(data)) {
         return data.map(sanitizeResponse).filter(isDefined);
-    } else if (isObject(data)) {
+    }
+    if (isObject(data)) {
         let newData = {};
         forEach(data, (k, val) => {
             const newEntry = sanitizeResponse(val);
