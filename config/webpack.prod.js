@@ -29,7 +29,7 @@ module.exports = (env) => {
         output: {
             path: appDist,
             publicPath: '/',
-            chunkFilename: 'js/[name].s/chunkhash].js',
+            chunkFilename: 'js/[name].[chunkhash].js',
             filename: 'js/[name].[contenthash].js',
             sourceMapFilename: 'sourcemaps/[file].map',
         },
