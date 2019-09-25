@@ -1,17 +1,19 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const StylishPlugin = require('eslint/lib/cli-engine/formatters/stylish');
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const dotenv = require('dotenv').config({
+import path from 'path';
+import webpack from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { config } from 'dotenv';
+
+import getEnvVariables from './env.js';
+
+const dotenv = config({
     path: '.env',
 });
-const getEnvVariables = require('./env.js');
 
 const appBase = process.cwd();
 const eslintFile = path.resolve(appBase, '.eslintrc-loader.js');
@@ -29,9 +31,9 @@ module.exports = (env) => {
         output: {
             path: appDist,
             publicPath: '/',
+            sourceMapFilename: 'sourcemaps/[file].map',
             chunkFilename: 'js/[name].[chunkhash].js',
             filename: 'js/[name].[contenthash].js',
-            sourceMapFilename: 'sourcemaps/[file].map',
         },
 
         resolve: {
@@ -46,23 +48,14 @@ module.exports = (env) => {
         mode: 'production',
 
         devtool: 'source-map',
+
         node: {
             fs: 'empty',
         },
 
         optimization: {
             minimizer: [
-                /*
                 // NOTE: Using TerserPlugin instead of UglifyJsPlugin as es6 support deprecated
-                new UglifyJsPlugin({
-                    sourceMap: true,
-                    parallel: true,
-                    uglifyOptions: {
-                        mangle: true,
-                        compress: { typeofs: false },
-                    },
-                }),
-                */
                 new TerserPlugin({
                     parallel: true,
                     sourceMap: true,
@@ -110,12 +103,14 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.(html)$/,
-                    use: {
-                        loader: 'html-loader',
-                        options: {
-                            attrs: [':data-src'],
+                    use: [
+                        {
+                            loader: 'html-loader',
+                            options: {
+                                attrs: [':data-src'],
+                            },
                         },
-                    },
+                    ],
                 },
                 {
                     test: /\.scss$/,
@@ -164,6 +159,7 @@ module.exports = (env) => {
                 allowAsyncCycles: false,
                 cwd: appBase,
             }),
+            // Remove build folder anyway
             new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
