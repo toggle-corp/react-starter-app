@@ -1,15 +1,17 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const StylishPlugin = require('eslint/lib/cli-engine/formatters/stylish');
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const dotenv = require('dotenv').config({
+import path from 'path';
+import webpack from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+import { config } from 'dotenv';
+
+import getEnvVariables from './env.js';
+
+const dotenv = config({
     path: '.env',
 });
-const getEnvVariables = require('./env.js');
 
 const appBase = process.cwd();
 const eslintFile = path.resolve(appBase, '.eslintrc-loader.js');
@@ -27,9 +29,9 @@ module.exports = (env) => {
         output: {
             path: appDist,
             publicPath: '/',
+            sourceMapFilename: 'sourcemaps/[file].map',
             chunkFilename: 'js/[name].[hash].js',
             filename: 'js/[name].[hash].js',
-            sourceMapFilename: 'sourcemaps/[file].map',
             pathinfo: false,
         },
 
@@ -44,19 +46,22 @@ module.exports = (env) => {
 
         mode: 'development',
 
+        devtool: 'cheap-module-eval-source-map',
+
+        node: {
+            fs: 'empty',
+        },
+
         performance: {
             hints: 'warning',
         },
+
         stats: {
             assets: true,
             colors: true,
             errors: true,
             errorDetails: true,
             hash: true,
-        },
-        devtool: 'cheap-module-eval-source-map',
-        node: {
-            fs: 'empty',
         },
 
         devServer: {
@@ -141,6 +146,8 @@ module.exports = (env) => {
             ],
         },
         plugins: [
+            // NOTE: could try using react-hot-loader
+            // https://github.com/gaearon/react-hot-loader
             new webpack.DefinePlugin({
                 'process.env': ENV_VARS,
             }),
@@ -164,9 +171,6 @@ module.exports = (env) => {
                 chunkFilename: 'css/[id].css',
             }),
             new webpack.HotModuleReplacementPlugin(),
-            // new BundleAnalyzerPlugin(),
-            // NOTE: could try using react-hot-loader
-            // https://github.com/gaearon/react-hot-loader
         ],
     };
 };
