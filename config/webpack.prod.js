@@ -1,9 +1,14 @@
+import ResourceHintWebpackPlugin from 'resource-hints-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import WorkboxPlugin from 'workbox-webpack-plugin';
+import WebpackPwaManifest from 'webpack-pwa-manifest';
 import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -15,6 +20,8 @@ const dotenv = config({
     path: '.env',
 });
 
+const gitRevisionPlugin = new GitRevisionPlugin();
+
 const appBase = process.cwd();
 const eslintFile = path.resolve(appBase, '.eslintrc-loader.js');
 const appSrc = path.resolve(appBase, 'src/');
@@ -22,9 +29,16 @@ const appDist = path.resolve(appBase, 'build/');
 const appIndexJs = path.resolve(appBase, 'src/index.tsx');
 const appIndexHtml = path.resolve(appBase, 'public/index.html');
 const appFavicon = path.resolve(appBase, 'public/favicon.ico');
+const appFaviconImage = path.resolve(appBase, 'public/favicon.png');
 
 module.exports = (env) => {
-    const ENV_VARS = { ...dotenv.pared, ...getEnvVariables(env) };
+    const ENV_VARS = {
+        ...dotenv.pared,
+        ...getEnvVariables(env),
+        REACT_APP_VERSION: JSON.stringify(gitRevisionPlugin.version()),
+        REACT_APP_COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+        REACT_APP_BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+    };
 
     return {
         entry: appIndexJs,
@@ -164,7 +178,7 @@ module.exports = (env) => {
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',
-                title: '__APP_ID__',
+                title: 'MY_APP_NAME',
                 favicon: path.resolve(appFavicon),
                 chunksSortMode: 'none',
             }),
@@ -172,6 +186,42 @@ module.exports = (env) => {
                 filename: 'css/[name].css',
                 chunkFilename: 'css/[id].css',
             }),
+            new WorkboxPlugin.GenerateSW({
+                // these options encourage the ServiceWorkers to get in there fast
+                // and not allow any straggling "old" SWs to hang around
+                clientsClaim: true,
+                skipWaiting: true,
+                include: [/\.html$/, /\.js$/, /\.css$/],
+                navigateFallback: '/index.html',
+                navigateFallbackBlacklist: [/^\/assets/, /^\/admin/, /^\/api/],
+                cleanupOutdatedCaches: true,
+                runtimeCaching: [
+                    {
+                        urlPattern: /assets/,
+                        handler: 'cacheFirst',
+                    },
+                ],
+            }),
+            new WebpackPwaManifest({
+                name: 'MY_APP_ID',
+                short_name: 'MY_APP_NAME',
+                description: 'MY_APP_DESCRIPTION',
+                background_color: '#ffffff',
+                orientation: 'portrait',
+                // theme_color: 'MY_APP_COLOR',
+                display: 'standalone',
+                start_url: '/',
+                scope: '/',
+                icons: [
+                    {
+                        src: path.resolve(appFaviconImage),
+                        sizes: [96, 128, 192, 256, 384, 512],
+                        destination: path.join('assets', 'icons'),
+                    },
+                ],
+            }),
+            new CompressionPlugin(),
+            new ResourceHintWebpackPlugin(),
             new webpack.HashedModuleIdsPlugin(),
         ],
     };

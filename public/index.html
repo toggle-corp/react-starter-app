@@ -3,21 +3,25 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="Description" content="MY_APP_DESCRIPTION">
 
     <title>
-        __APP_NAME__
+        MY_APP_NAME
     </title>
+
     <style>
         :root {
+            --color-background-base: #efefef;
             --root-preload-background-color: #f5f5f5;
             --root-preload-text-color: rgba(0, 0, 0, .5);
             --root-preload-height: 100vh;
             --root-text-font-size: 18px;
-            --font-family-sans-serif: sans-serif;
+            --font-family-sans-serif: 'Noto Sans TC', sans-serif;
         }
 
         html, body {
             margin: 0;
+            background-color: var(--color-background-base);
             padding: 0;
         }
 
@@ -33,18 +37,60 @@
             font-size: var(--root-text-font-size);
         }
     </style>
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
   </head>
-  <body style="background-color: #f5f5f5;">
+  <body>
     <noscript>
-        __APP_NAME__ needs Javascript.
+        MY_APP_NAME needs Javascript.
     </noscript>
-    <div id="root">
+    <div id="MY_APP_ID-root">
         <div id="root-preload">
-            Initializing __APP_NAME__ ...
+            Initializing MY_APP_NAME ...
         </div>
     </div>
 
     <!-- External resources  -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" />
+
+      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker
+              .register('/service-worker.js')
+              .then((registration) => {
+                console.info('SW registered: ', registration);
+                registration.onupdatefound = () => {
+                  const installingWorker = registration.installing;
+                  installingWorker.onstatechange = () => {
+                    switch (installingWorker.state) {
+                      case 'installed':
+                        if (navigator.serviceWorker.controller) {
+                          // New update is available
+                          console.info('SW: New update is available!');
+                          const shouldUpdate = window.confirm('New update is available. Do you want to update now?');
+                          if (shouldUpdate) {
+                            window.location.reload(true);
+                          }
+                        } else {
+                          // No new update
+                          console.info('SW: No new updates!');
+                        }
+                        break;
+                      default:
+                        break;
+                    }
+                  };
+                };
+              })
+              .catch((registrationError) => {
+                console.error('SW registration failed: ', registrationError);
+              });
+          });
+        }
+      </script>
   </body>
 </html>
