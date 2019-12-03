@@ -189,7 +189,7 @@ module.exports = (env) => {
                 name: 'MY_APP_ID',
                 short_name: 'MY_APP_NAME',
                 description: 'MY_APP_DESCRIPTION',
-                background_color: '#ffffff',
+                background_color: '#f0f0f0',
                 orientation: 'portrait',
                 // theme_color: 'MY_APP_COLOR',
                 display: 'standalone',

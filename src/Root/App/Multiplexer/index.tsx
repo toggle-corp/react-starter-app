@@ -5,10 +5,12 @@ import { _cs } from '@togglecorp/fujs';
 
 import DangerButton from '#rsca/Button/DangerButton';
 
-import Loading from '#components/Loading';
 import Navbar from '#components/Navbar';
 import errorBound from '#components/errorBound';
 import helmetify from '#components/helmetify';
+
+import LoadingAnimation from '#rscv/LoadingAnimation';
+import Message from '#rscv/Message';
 
 import { routeSettings } from '#constants';
 import styles from './styles.scss';
@@ -23,37 +25,41 @@ function reloadPage(): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const ErrorInPage = () => (
-    <div className={styles.pageError}>
+const BaseErrorInPage = ({
+    onReload = reloadPage,
+    message = 'Some problem occured',
+    className,
+}: {
+    className?: string;
+    message?: string;
+    onReload?: () => void;
+}) => (
+    <Message className={_cs(className, styles.pageError)}>
         <div className={styles.message}>
-            Some problem occured.
+            { message }
         </div>
         <DangerButton
             className={styles.reloadButton}
             transparent
-            onClick={reloadPage}
+            onClick={onReload}
         >
             Reload
         </DangerButton>
-    </div>
+    </Message>
+);
+
+const ErrorInPage = () => (
+    <BaseErrorInPage />
 );
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const RetryableErrorInPage = ({ error, retry }: LoadOptions) => {
     console.error(error);
+
     return (
-        <div className={styles.retryablePageError}>
-            <div className={styles.message}>
-                Some problem occured.
-            </div>
-            <DangerButton
-                className={styles.reloadButton}
-                onClick={retry}
-                transparent
-            >
-                Reload
-            </DangerButton>
-        </div>
+        <BaseErrorInPage
+            onReload={retry}
+        />
     );
 };
 
@@ -69,16 +75,13 @@ const LoadingPage = ({ error, retry }: LoadOptions) => {
     }
 
     return (
-        <Loading
-            className={styles.loading}
-            text="Loading Page"
-            pending
-        />
+        <LoadingAnimation message="Loading page" />
     );
 };
 
 const routes = routeSettings.map(({ load, ...settings }) => {
-    const Component = errorBound<typeof settings>(ErrorInPage)(
+    type PageType = typeof settings & { className?: string };
+    const Component = errorBound<PageType>(ErrorInPage)(
         helmetify(
             Loadable({
                 loader: load,
@@ -90,6 +93,7 @@ const routes = routeSettings.map(({ load, ...settings }) => {
     return (
         <Component
             key={settings.name}
+            className={styles.content}
             {...settings}
         />
     );
@@ -103,35 +107,24 @@ interface Props {
 }
 
 class Multiplexer extends React.PureComponent<Props, State> {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    private renderRoutes = () => {
-        const { pending } = this.props;
-        if (pending) {
-            return (
-                <Loading
-                    text="Loading Resources"
-                    pending
-                />
-            );
-        }
-
-        return (
-            <Router className={styles.router}>
-                {routes}
-            </Router>
-        );
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     public render() {
-        const { className } = this.props;
+        const {
+            className,
+            pending,
+        } = this.props;
 
         return (
             <div className={_cs(styles.multiplexer, className, 'multiplexer')}>
                 <Navbar className={styles.navbar} />
-                <div className={_cs(styles.appMainContent, 'app-main-content')}>
-                    {this.renderRoutes()}
-                </div>
+                {pending ? (
+                    <div className={styles.loadingAnimationContainer}>
+                        <LoadingAnimation message="Loading resources" />
+                    </div>
+                ) : (
+                    <Router className={styles.router}>
+                        {routes}
+                    </Router>
+                )}
             </div>
         );
     }

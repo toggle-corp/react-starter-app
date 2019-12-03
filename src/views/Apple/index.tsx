@@ -1,4 +1,5 @@
 import React from 'react';
+import { _cs } from '@togglecorp/fujs';
 
 import Message from '#rscv/Message';
 import Icon from '#rscg/Icon';
@@ -39,7 +40,10 @@ interface State {
 interface Params {
     // triggerAlertRequest: (timeout: number) => void;
 }
-interface OwnProps {}
+interface OwnProps {
+    className?: string;
+}
+
 type Props = OwnProps;
 /*
 interface PropsFromState {
@@ -120,8 +124,10 @@ const requests: { [key: string]: ClientAttributes<ReduxProps, Params> } = {
 // eslint-disable-next-line react/prefer-stateless-function
 class Apple extends React.PureComponent<Props, State> {
     public render() {
+        const { className } = this.props;
+
         return (
-            <div className={styles.apple}>
+            <div className={_cs(className, styles.apple)}>
                 <Message className={styles.message}>
                     <Icon
                         className={styles.icon}
