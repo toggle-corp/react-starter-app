@@ -10,6 +10,9 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+import postcssPresetEnv from 'postcss-preset-env';
+import postcssNested from 'postcss-nested';
+import postcssNormalize from 'postcss-normalize';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import { config } from 'dotenv';
@@ -52,10 +55,6 @@ module.exports = (env) => {
 
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            alias: {
-                'base-scss': path.resolve(appBase, 'src/stylesheets/'),
-                'rs-scss': path.resolve(appBase, 'src/vendor/react-store/stylesheets/'),
-            },
             symlinks: false,
         },
 
@@ -103,9 +102,9 @@ module.exports = (env) => {
                     test: /\.(js|jsx|ts|tsx)$/,
                     include: appSrc,
                     use: [
-                        'babel-loader',
+                        require.resolve('babel-loader'),
                         {
-                            loader: 'eslint-loader',
+                            loader: require.resolve('eslint-loader'),
                             options: {
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
@@ -119,7 +118,7 @@ module.exports = (env) => {
                     test: /\.(html)$/,
                     use: [
                         {
-                            loader: 'html-loader',
+                            loader: require.resolve('html-loader'),
                             options: {
                                 attrs: [':data-src'],
                             },
@@ -127,7 +126,7 @@ module.exports = (env) => {
                     ],
                 },
                 {
-                    test: /\.scss$/,
+                    test: /\.css$/,
                     include: appSrc,
                     use: [
                         MiniCssExtractPlugin.loader,
@@ -143,8 +142,14 @@ module.exports = (env) => {
                             },
                         },
                         {
-                            loader: require.resolve('sass-loader'),
+                            loader: require.resolve('postcss-loader'),
                             options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    postcssPresetEnv(),
+                                    postcssNested(),
+                                    postcssNormalize(),
+                                ],
                                 sourceMap: true,
                             },
                         },
@@ -154,7 +159,7 @@ module.exports = (env) => {
                     test: /\.(png|jpg|gif|svg)$/,
                     use: [
                         {
-                            loader: 'file-loader',
+                            loader: require.resolve('file-loader'),
                             options: {
                                 name: 'assets/[hash].[ext]',
                             },

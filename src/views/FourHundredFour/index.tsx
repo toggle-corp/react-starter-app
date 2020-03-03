@@ -1,14 +1,9 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 
-import styles from './styles.scss';
+import styles from './styles.css';
 
-const FourHundredFour = ({
-    className,
-}: {
-    className?: string;
-}) => (
-    <div className={_cs(className, styles.fourHundredFour)}>
+const FourHundredFour = () => (
+    <div className={styles.fourHundredFour}>
         <h1 className={styles.heading}>
             404
         </h1>
