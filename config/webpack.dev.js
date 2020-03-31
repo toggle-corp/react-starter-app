@@ -9,6 +9,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
 
+import pkg from '../package.json';
 import { config } from 'dotenv';
 
 import getEnvVariables from './env.js';
@@ -186,12 +187,14 @@ module.exports = (env) => {
                 chunkFilename: 'css/[id].css',
             }),
             new WebpackPwaManifest({
-                name: 'MY_APP_ID',
                 short_name: 'MY_APP_NAME',
-                description: 'MY_APP_DESCRIPTION',
+                // theme_color: 'MY_APP_COLOR',
+
+                name: pkg.name,
+                description: pkg.description,
+                author: pkg.author,
                 background_color: '#f0f0f0',
                 orientation: 'portrait',
-                // theme_color: 'MY_APP_COLOR',
                 display: 'standalone',
                 start_url: '/',
                 scope: '/',

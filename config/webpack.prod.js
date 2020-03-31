@@ -1,6 +1,4 @@
 import ResourceHintWebpackPlugin from 'resource-hints-webpack-plugin';
-import CompressionPlugin from 'compression-webpack-plugin';
-import WorkboxPlugin from 'workbox-webpack-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import path from 'path';
 import webpack from 'webpack';
@@ -10,8 +8,12 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+import CompressionPlugin from 'compression-webpack-plugin';
+import WorkboxPlugin from 'workbox-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+
+import pkg from '../package.json';
 import { config } from 'dotenv';
 
 import getEnvVariables from './env.js';
@@ -31,6 +33,8 @@ const appIndexHtml = path.resolve(appBase, 'public/index.html');
 const appFavicon = path.resolve(appBase, 'public/favicon.ico');
 const appFaviconImage = path.resolve(appBase, 'public/favicon.png');
 
+const PUBLIC_PATH = '/';
+
 module.exports = (env) => {
     const ENV_VARS = {
         ...dotenv.pared,
@@ -44,7 +48,7 @@ module.exports = (env) => {
         entry: appIndexJs,
         output: {
             path: appDist,
-            publicPath: '/',
+            publicPath: PUBLIC_PATH,
             sourceMapFilename: 'sourcemaps/[file].map',
             chunkFilename: 'js/[name].[chunkhash].js',
             filename: 'js/[name].[contenthash].js',
@@ -203,12 +207,14 @@ module.exports = (env) => {
                 ],
             }),
             new WebpackPwaManifest({
-                name: 'MY_APP_ID',
                 short_name: 'MY_APP_NAME',
-                description: 'MY_APP_DESCRIPTION',
-                background_color: '#ffffff',
-                orientation: 'portrait',
                 // theme_color: 'MY_APP_COLOR',
+
+                name: pkg.name,
+                description: pkg.description,
+                author: pkg.author,
+                background_color: '#f0f0f0',
+                orientation: 'portrait',
                 display: 'standalone',
                 start_url: '/',
                 scope: '/',
@@ -220,9 +226,10 @@ module.exports = (env) => {
                     },
                 ],
             }),
-            new CompressionPlugin(),
             new ResourceHintWebpackPlugin(),
+
             new webpack.HashedModuleIdsPlugin(),
+            new CompressionPlugin(),
         ],
     };
 };
