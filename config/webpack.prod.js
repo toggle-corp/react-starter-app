@@ -120,14 +120,16 @@ module.exports = (env) => {
                     use: [
                         {
                             loader: require.resolve('html-loader'),
+                            /*
                             options: {
                                 attrs: [':data-src'],
                             },
+                            */
                         },
                     ],
                 },
                 {
-                    test: /\.css$/,
+                    test: /\.(css|scss)$/,
                     include: appSrc,
                     use: [
                         MiniCssExtractPlugin.loader,
@@ -138,7 +140,7 @@ module.exports = (env) => {
                                 modules: {
                                     localIdentName: '[name]_[local]_[hash:base64]',
                                 },
-                                localsConvention: 'camelCase',
+                                localsConvention: 'camelCaseOnly',
                                 sourceMap: true,
                             },
                         },
@@ -183,7 +185,7 @@ module.exports = (env) => {
             new CleanWebpackPlugin(),
             new StyleLintPlugin({
                 files: ['**/*.css'],
-                context: appBase,
+                context: appSrc,
             }),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
