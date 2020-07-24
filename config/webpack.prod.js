@@ -56,6 +56,7 @@ module.exports = (env) => {
 
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            symlinks: false,
             alias: {
                 'base-scss': path.resolve(appBase, 'src/stylesheets/'),
                 'rs-scss': path.resolve(appBase, 'src/vendor/react-store/stylesheets/'),
@@ -160,7 +161,7 @@ module.exports = (env) => {
                         {
                             loader: 'file-loader',
                             options: {
-                                name: 'assets/[hash].[ext]',
+                                name: 'assets/[name].[contenthash].[ext]',
                             },
                         },
                     ],
@@ -187,8 +188,8 @@ module.exports = (env) => {
                 chunksSortMode: 'none',
             }),
             new MiniCssExtractPlugin({
-                filename: 'css/[name].css',
-                chunkFilename: 'css/[id].css',
+                filename: 'css/[name].[contenthash].css',
+                chunkFilename: 'css/[id].[contenthash].css',
             }),
             new WorkboxPlugin.GenerateSW({
                 // these options encourage the ServiceWorkers to get in there fast

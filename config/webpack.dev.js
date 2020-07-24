@@ -46,13 +46,14 @@ module.exports = (env) => {
             path: appDist,
             publicPath: PUBLIC_PATH,
             sourceMapFilename: 'sourcemaps/[file].map',
-            chunkFilename: 'js/[name].[hash].js',
-            filename: 'js/[name].[hash].js',
+            chunkFilename: 'js/[name].js',
+            filename: 'js/[name].js',
             pathinfo: false,
         },
 
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            symlinks: false,
             alias: {
                 'base-scss': path.resolve(appBase, 'src/stylesheets/'),
                 'rs-scss': path.resolve(appBase, 'src/vendor/react-store/stylesheets/'),
@@ -62,7 +63,7 @@ module.exports = (env) => {
 
         mode: 'development',
 
-        devtool: 'cheap-module-eval-source-map',
+        devtool: 'eval-cheap-module-source-map',
 
         node: {
             fs: 'empty',
@@ -72,6 +73,7 @@ module.exports = (env) => {
             hints: 'warning',
         },
 
+        /*
         stats: {
             assets: true,
             colors: true,
@@ -79,6 +81,7 @@ module.exports = (env) => {
             errorDetails: true,
             hash: true,
         },
+        */
 
         devServer: {
             host: '0.0.0.0',
@@ -154,7 +157,7 @@ module.exports = (env) => {
                         {
                             loader: 'file-loader',
                             options: {
-                                name: 'assets/[hash].[ext]',
+                                name: 'assets/[name].[ext]',
                             },
                         },
                     ],
