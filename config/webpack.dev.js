@@ -106,6 +106,7 @@ module.exports = (env) => {
                         {
                             loader: require.resolve('eslint-loader'),
                             options: {
+                                cache: true,
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
@@ -133,6 +134,7 @@ module.exports = (env) => {
                     use: [
                         require.resolve('style-loader'),
                         {
+                            // NOTE: we may need to use postcss-modules instead of css-loader
                             loader: require.resolve('css-loader'),
                             options: {
                                 importLoaders: 1,

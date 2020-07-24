@@ -97,7 +97,7 @@ module.exports = {
 
 
         'react/no-unused-state': 'warn',
-        'react/jsx-props-no-spreadig': 'warn',
+        'react/jsx-props-no-spreading': 'warn',
         'react/default-props-match-prop-types': ['warn', {
             'allowRequiredDefaults': true,
         }],

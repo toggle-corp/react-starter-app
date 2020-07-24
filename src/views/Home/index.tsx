@@ -1,20 +1,16 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 
 import styles from './styles.css';
 
-interface Props {
-    className?: string;
-}
-
-const Home = (props: Props) => {
-    const { className } = props;
-
-    return (
-        <div className={_cs(className, styles.home)}>
+const Home = () => (
+    <div className={styles.home}>
+        <h1 className={styles.heading}>
             Home
-        </div>
-    );
-};
+        </h1>
+        <p className={styles.message}>
+            This is your homepage.
+        </p>
+    </div>
+);
 
 export default Home;

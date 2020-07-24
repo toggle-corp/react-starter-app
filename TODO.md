@@ -1,0 +1,1 @@
+- Enable esmodules in css-loader

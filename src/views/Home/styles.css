@@ -1,9 +1,19 @@
 .home {
-    background-color: var(--color-background-alt);
-    height: var(--height-content);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+
+    .heading {
+        color: var(--color-text);
+        font-size: var(--font-size-super-large-alt);
+        font-weight: var(--font-weight-bold);
+    }
 
     .message {
-        display: flex;
-        flex-direction: column;
+        margin: var(--spacing-large) 0;
+        text-align: center;
+        font-size: var(--font-size-large-alt);
     }
 }
