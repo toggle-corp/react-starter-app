@@ -2,15 +2,15 @@ import React from 'react';
 
 import styles from './styles.css';
 
-const FourHundredFour = () => (
-    <div className={styles.fourHundredFour}>
+const Home = () => (
+    <div className={styles.home}>
         <h1 className={styles.heading}>
-            404
+            Home
         </h1>
         <p className={styles.message}>
-            The page you are looking for does not exist!
+            This is your homepage.
         </p>
     </div>
 );
 
-export default FourHundredFour;
+export default Home;

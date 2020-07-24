@@ -1,4 +1,6 @@
 import ResourceHintWebpackPlugin from 'resource-hints-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import WorkboxPlugin from 'workbox-webpack-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import path from 'path';
 import webpack from 'webpack';
@@ -8,8 +10,10 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
-import CompressionPlugin from 'compression-webpack-plugin';
-import WorkboxPlugin from 'workbox-webpack-plugin';
+import postcssPresetEnv from 'postcss-preset-env';
+import postcssNested from 'postcss-nested';
+import postcssNormalize from 'postcss-normalize';
+import StyleLintPlugin from 'stylelint-webpack-plugin';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 
@@ -57,11 +61,6 @@ module.exports = (env) => {
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             symlinks: false,
-            alias: {
-                'base-scss': path.resolve(appBase, 'src/stylesheets/'),
-                'rs-scss': path.resolve(appBase, 'src/vendor/react-store/stylesheets/'),
-            },
-            symlinks: false,
         },
 
         mode: 'production',
@@ -108,9 +107,9 @@ module.exports = (env) => {
                     test: /\.(js|jsx|ts|tsx)$/,
                     include: appSrc,
                     use: [
-                        'babel-loader',
+                        require.resolve('babel-loader'),
                         {
-                            loader: 'eslint-loader',
+                            loader: require.resolve('eslint-loader'),
                             options: {
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
@@ -124,7 +123,7 @@ module.exports = (env) => {
                     test: /\.(html)$/,
                     use: [
                         {
-                            loader: 'html-loader',
+                            loader: require.resolve('html-loader'),
                             options: {
                                 attrs: [':data-src'],
                             },
@@ -132,7 +131,7 @@ module.exports = (env) => {
                     ],
                 },
                 {
-                    test: /\.scss$/,
+                    test: /\.(css|scss)$/,
                     include: appSrc,
                     use: [
                         MiniCssExtractPlugin.loader,
@@ -143,13 +142,19 @@ module.exports = (env) => {
                                 modules: {
                                     localIdentName: '[name]_[local]_[hash:base64]',
                                 },
-                                localsConvention: 'camelCase',
+                                localsConvention: 'camelCaseOnly',
                                 sourceMap: true,
                             },
                         },
                         {
-                            loader: require.resolve('sass-loader'),
+                            loader: require.resolve('postcss-loader'),
                             options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    postcssPresetEnv(),
+                                    postcssNested(),
+                                    postcssNormalize(),
+                                ],
                                 sourceMap: true,
                             },
                         },
@@ -159,7 +164,7 @@ module.exports = (env) => {
                     test: /\.(png|jpg|gif|svg)$/,
                     use: [
                         {
-                            loader: 'file-loader',
+                            loader: require.resolve('file-loader'),
                             options: {
                                 name: 'assets/[name].[contenthash].[ext]',
                             },
@@ -180,6 +185,10 @@ module.exports = (env) => {
             }),
             // Remove build folder anyway
             new CleanWebpackPlugin(),
+            new StyleLintPlugin({
+                files: ['**/*.css'],
+                context: appSrc,
+            }),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',

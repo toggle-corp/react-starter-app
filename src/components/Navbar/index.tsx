@@ -1,57 +1,37 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 
-import ListView from '#rscv/List/ListView';
-
-import { routeSettings, hasNavbar, NavbarRoute } from '#constants';
-
-import MenuItem from './MenuItem';
-
-import styles from './styles.scss';
-
-const pages = routeSettings.filter(hasNavbar);
+import styles from './styles.css';
 
 interface Props {
     className?: string;
 }
 
-class Navbar extends React.PureComponent<Props> {
-    private static menuKeySelector = (data: NavbarRoute) => data.name;
+const Navbar = (props: Props) => {
+    const {
+        className,
+    } = props;
 
-    private menuRendererParams = (key: string, data: NavbarRoute) => ({
-        title: data.title,
-        link: data.path,
-        disabled: data.disabled,
-    });
-
-    public render() {
-        const {
-            className: classNameFromProps,
-        } = this.props;
-
-        const className = _cs(
-            classNameFromProps,
-            styles.navbar,
-        );
-
-        return (
-            <nav className={className}>
-                <div
-                    className={styles.appName}
-                    title={process.env.REACT_APP_VERSION}
-                >
-                    MY_APP_NAME
+    return (
+        <nav className={_cs(className, styles.navbar)}>
+            <div className={styles.appBrand}>
+                MY_APP_NAME
+            </div>
+            <div className={styles.actions}>
+                <div className={styles.navLinks}>
+                    <NavLink
+                        exact
+                        className={styles.link}
+                        activeClassName={styles.active}
+                        to="/"
+                    >
+                        Home
+                    </NavLink>
                 </div>
-                <ListView
-                    data={pages}
-                    keySelector={Navbar.menuKeySelector}
-                    renderer={MenuItem}
-                    rendererParams={this.menuRendererParams}
-                    className={styles.menu}
-                />
-            </nav>
-        );
-    }
-}
+            </div>
+        </nav>
+    );
+};
 
 export default Navbar;

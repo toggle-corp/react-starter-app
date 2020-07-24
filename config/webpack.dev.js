@@ -8,6 +8,10 @@ import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
 import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+import postcssPresetEnv from 'postcss-preset-env';
+import postcssNested from 'postcss-nested';
+import postcssNormalize from 'postcss-normalize';
+import StyleLintPlugin from 'stylelint-webpack-plugin';
 
 import pkg from '../package.json';
 import { config } from 'dotenv';
@@ -54,11 +58,6 @@ module.exports = (env) => {
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             symlinks: false,
-            alias: {
-                'base-scss': path.resolve(appBase, 'src/stylesheets/'),
-                'rs-scss': path.resolve(appBase, 'src/vendor/react-store/stylesheets/'),
-            },
-            symlinks: false,
         },
 
         mode: 'development',
@@ -103,11 +102,12 @@ module.exports = (env) => {
                     test: /\.(js|jsx|ts|tsx)$/,
                     include: appSrc,
                     use: [
-                        'cache-loader',
-                        'babel-loader',
+                        require.resolve('cache-loader'),
+                        require.resolve('babel-loader'),
                         {
-                            loader: 'eslint-loader',
+                            loader: require.resolve('eslint-loader'),
                             options: {
+                                cache: true,
                                 configFile: eslintFile,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
@@ -120,7 +120,7 @@ module.exports = (env) => {
                     test: /\.(html)$/,
                     use: [
                         {
-                            loader: 'html-loader',
+                            loader: require.resolve('html-loader'),
                             options: {
                                 attrs: [':data-src'],
                             },
@@ -128,24 +128,31 @@ module.exports = (env) => {
                     ],
                 },
                 {
-                    test: /\.scss$/,
+                    test: /\.(css|scss)$/,
                     include: appSrc,
                     use: [
-                        'style-loader',
+                        require.resolve('style-loader'),
                         {
+                            // NOTE: we may need to use postcss-modules instead of css-loader
                             loader: require.resolve('css-loader'),
                             options: {
                                 importLoaders: 1,
                                 modules: {
                                     localIdentName: '[name]_[local]_[hash:base64]',
                                 },
-                                localsConvention: 'camelCase',
+                                localsConvention: 'camelCaseOnly',
                                 sourceMap: true,
                             },
                         },
                         {
-                            loader: require.resolve('sass-loader'),
+                            loader: require.resolve('postcss-loader'),
                             options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    postcssPresetEnv(),
+                                    postcssNested(),
+                                    postcssNormalize(),
+                                ],
                                 sourceMap: true,
                             },
                         },
@@ -155,7 +162,7 @@ module.exports = (env) => {
                     test: /\.(png|jpg|gif|svg)$/,
                     use: [
                         {
-                            loader: 'file-loader',
+                            loader: require.resolve('file-loader'),
                             options: {
                                 name: 'assets/[name].[ext]',
                             },
@@ -178,6 +185,10 @@ module.exports = (env) => {
             }),
             // Remove build folder anyway
             new CleanWebpackPlugin(),
+            new StyleLintPlugin({
+                files: ['**/*.css'],
+                context: appSrc,
+            }),
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',

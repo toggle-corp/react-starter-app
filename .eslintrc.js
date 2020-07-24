@@ -1,7 +1,7 @@
 module.exports = {
     'extends': [
         'airbnb',
-        'plugin:css-modules/recommended',
+        'plugin:postcss-modules/recommended',
         'plugin:@typescript-eslint/recommended',
     ],
     'env': {
@@ -12,10 +12,13 @@ module.exports = {
         'react',
         'react-hooks',
         'import',
-        'css-modules',
+        'postcss-modules',
         '@typescript-eslint',
     ],
     'settings': {
+        'postcss-modules': {
+            'camelCase': 'camelCaseOnly',
+        },
         'import/resolver': {
             'babel-module': {
                 'root': ['.'],
@@ -23,23 +26,11 @@ module.exports = {
                 'alias': {
                     '#components': './src/components',
                     '#config': './src/config',
-                    '#constants': './src/constants',
-                    '#notify': './src/notify',
-                    '#actionCreators': './src/store/actionCreators',
-                    '#selectors': './src/store/selectors',
                     '#request': './src/request',
                     '#resources': './src/resources',
                     '#schema': './src/schema',
-                    '#store': './src/store',
                     '#ts': './src/ts',
                     '#utils': './src/utils',
-                    '#rsca': './src/vendor/react-store/components/Action',
-                    '#rscg': './src/vendor/react-store/components/General',
-                    '#rsci': './src/vendor/react-store/components/Input',
-                    '#rscv': './src/vendor/react-store/components/View',
-                    '#rscz': './src/vendor/react-store/components/Visualization',
-                    '#rsk': './src/vendor/react-store/constants',
-                    '#rsu': './src/vendor/react-store/utils',
                     '#views': './src/views',
                 },
             },
@@ -87,8 +78,10 @@ module.exports = {
         'import/extensions': ['off', 'never'],
         'import/no-extraneous-dependencies': ['error', {'devDependencies': true }],
 
-        'css-modules/no-unused-class': [1, { 'camelCase': true }],
-        'css-modules/no-undef-class': [1, { 'camelCase': true }],
+        // 'postcss-modules/no-unused-class': [1, { 'camelCase': true }],
+        // 'postcss-modules/no-undef-class': [1, { 'camelCase': true }],
+        'postcss-modules/no-unused-class': 'warn',
+        'postcss-modules/no-undef-class': 'warn',
 
         'prefer-destructuring': 'warn',
         'function-paren-newline': ['warn', 'consistent'],
@@ -106,7 +99,7 @@ module.exports = {
 
 
         'react/no-unused-state': 'warn',
-        'react/jsx-props-no-spreadig': 'warn',
+        'react/jsx-props-no-spreading': 'warn',
         'react/default-props-match-prop-types': ['warn', {
             'allowRequiredDefaults': true,
         }],

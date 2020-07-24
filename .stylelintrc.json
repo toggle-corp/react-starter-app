@@ -1,16 +1,16 @@
 {
-    "plugins": [
-        "stylelint-scss"
-    ],
+    "plugins": [],
     "extends": [
-        "stylelint-config-recommended-scss",
+        "stylelint-config-recommended",
         "stylelint-config-concentric"
     ],
     "rules": {
         "indentation": 4,
         "selector-pseudo-class-no-unknown": [
             true,
-            { "ignorePseudoClasses": ["global"] }
+            {
+                "ignorePseudoClasses": ["global"]
+            }
         ]
     }
 }
