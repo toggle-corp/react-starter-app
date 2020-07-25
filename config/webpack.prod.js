@@ -9,7 +9,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
-import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+// import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
 import postcssPresetEnv from 'postcss-preset-env';
 import postcssNested from 'postcss-nested';
 import postcssNormalize from 'postcss-normalize';
@@ -108,9 +108,10 @@ module.exports = (env) => {
                             loader: require.resolve('eslint-loader'),
                             options: {
                                 configFile: eslintFile,
+                                failOnError: true,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
-                                formatter: StylishPlugin,
+                                // formatter: StylishPlugin,
                             },
                         },
                     ],
@@ -118,14 +119,7 @@ module.exports = (env) => {
                 {
                     test: /\.(html)$/,
                     use: [
-                        {
-                            loader: require.resolve('html-loader'),
-                            /*
-                            options: {
-                                attrs: [':data-src'],
-                            },
-                            */
-                        },
+                        require.resolve('html-loader'),
                     ],
                 },
                 {
@@ -140,6 +134,7 @@ module.exports = (env) => {
                                 modules: {
                                     localIdentName: '[name]_[local]_[hash:base64]',
                                 },
+                                esModule: true,
                                 localsConvention: 'camelCaseOnly',
                                 sourceMap: true,
                             },
@@ -205,12 +200,12 @@ module.exports = (env) => {
                 skipWaiting: true,
                 include: [/\.html$/, /\.js$/, /\.css$/],
                 navigateFallback: '/index.html',
-                navigateFallbackBlacklist: [/^\/assets/, /^\/admin/, /^\/api/],
+                navigateFallbackDenylist: [/^\/assets/, /^\/admin/, /^\/api/],
                 cleanupOutdatedCaches: true,
                 runtimeCaching: [
                     {
                         urlPattern: /assets/,
-                        handler: 'cacheFirst',
+                        handler: 'CacheFirst',
                     },
                 ],
             }),
