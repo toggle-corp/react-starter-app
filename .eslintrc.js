@@ -97,9 +97,9 @@ module.exports = {
         '@typescript-eslint/no-empty-interface': 0,
         '@typescript-eslint/explicit-function-return-type': 0,
 
-
         'react/no-unused-state': 'warn',
         'react/jsx-props-no-spreading': 'warn',
+        'react/require-default-props': 'warn',
         'react/default-props-match-prop-types': ['warn', {
             'allowRequiredDefaults': true,
         }],

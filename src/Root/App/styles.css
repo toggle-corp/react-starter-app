@@ -49,8 +49,19 @@
     --color-text-on-warning: rgba(255, 255, 255, .9);
 }
 
-
 body {
     color: var(--color-text);
     font-size: var(--font-size-medium);
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+a {
+    color: var(--color-primary);
+}
+
+* {
+    box-sizing: border-box;
 }
