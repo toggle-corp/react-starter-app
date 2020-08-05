@@ -6,7 +6,9 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
-    "sideEffects": ["src/Root/App/styles.css"],
+    "sideEffects": [
+        "src/Root/App/styles.css"
+    ],
     "scripts": {
         "start": "webpack-dev-server --mode development --config config/webpack.dev.js --env.NODE_ENV=development --history-api-fallback --config-register @babel/register",
         "build": "webpack --mode production --config config/webpack.prod.js --env.NODE_ENV=production --config-register @babel/register",
@@ -142,8 +144,8 @@
     "dependencies": {
         "@togglecorp/fujs": "^1.9.2-beta.0",
         "core-js": "3.6.5",
-        "react": "16.13.1",
-        "react-dom": "16.13.1",
+        "react": "^0.0.0-experimental-3d0895557",
+        "react-dom": "^0.0.0-experimental-3d0895557",
         "react-router-dom": "^5.2.0"
     }
 }
