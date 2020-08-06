@@ -3,14 +3,14 @@ import { Switch, Route } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 
 import Navbar from '#components/Navbar';
-import routes from './routes';
 
+import routes from './routes';
 import styles from './styles.css';
 
 interface TitleProps {
     value: string;
 }
-const Title = ({ value }: TitleProps) => {
+function Title({ value }: TitleProps) {
     useEffect(
         () => {
             document.title = value;
@@ -18,25 +18,33 @@ const Title = ({ value }: TitleProps) => {
         [value],
     );
     return null;
-};
+}
 
 interface LoadingProps {
     message: string;
 }
-const Loading = ({ message }: LoadingProps) => (
-    <div className={styles.loading}>
-        {message}
-    </div>
-);
+function Loading({ message }: LoadingProps) {
+    return (
+        <div className={styles.loading}>
+            {message}
+        </div>
+    );
+}
 
 interface Props {
     className?: string;
 }
-const Multiplexer = (props: Props) => {
-    const { className } = props;
+
+function Multiplexer(props: Props) {
+    const {
+        className,
+    } = props;
 
     return (
         <div className={_cs(className, styles.multiplexer)}>
+            <Navbar
+                className={styles.navbar}
+            />
             <Suspense
                 fallback={(
                     <Loading message="Please wait..." />
@@ -48,9 +56,10 @@ const Multiplexer = (props: Props) => {
                             path,
                             name,
                             title,
-                            hideNavbar,
+                            // hideNavbar,
                             load: Loader,
                         } = route;
+
                         return (
                             <Route
                                 exact
@@ -60,9 +69,6 @@ const Multiplexer = (props: Props) => {
                                 render={() => (
                                     <>
                                         <Title value={title} />
-                                        { !hideNavbar && (
-                                            <Navbar className={styles.navbar} />
-                                        )}
                                         <Loader className={styles.view} />
                                     </>
                                 )}
@@ -73,6 +79,5 @@ const Multiplexer = (props: Props) => {
             </Suspense>
         </div>
     );
-};
-
+}
 export default Multiplexer;

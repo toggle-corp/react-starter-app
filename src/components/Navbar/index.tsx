@@ -16,39 +16,17 @@ const Navbar = (props: Props) => {
             <div className={styles.appBrand}>
                 MY_APP_NAME
             </div>
-            <div className={styles.navLinks}>
-                <NavLink
-                    exact
-                    className={styles.link}
-                    activeClassName={styles.active}
-                    to="/"
-                >
-                    Home
-                </NavLink>
-                <NavLink
-                    exact
-                    className={styles.link}
-                    activeClassName={styles.active}
-                    to="/dashboard/"
-                >
-                    Dashboard
-                </NavLink>
-                <NavLink
-                    exact
-                    to="/infographics/"
-                    className={styles.link}
-                    activeClassName={styles.active}
-                >
-                    Infographics
-                </NavLink>
-                <NavLink
-                    exact
-                    to="/glossary/"
-                    className={styles.link}
-                    activeClassName={styles.active}
-                >
-                    Glossary
-                </NavLink>
+            <div className={styles.actions}>
+                <div className={styles.navLinks}>
+                    <NavLink
+                        exact
+                        className={styles.link}
+                        activeClassName={styles.active}
+                        to="/"
+                    >
+                        Home
+                    </NavLink>
+                </div>
             </div>
         </nav>
     );

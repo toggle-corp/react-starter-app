@@ -2,14 +2,14 @@
 
 # dependencies
 /node_modules
-vendor/
-src/public/
-generated/
 /.pnp
 .pnp.js
 
 # testing
 /coverage
+
+# development
+/build-dev-cache
 
 # production
 /build
@@ -29,3 +29,5 @@ yarn-error.log*
 *.tmp
 *.bak
 *.swp
+
+/src/public

@@ -2,8 +2,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    flex-grow: 1;
     justify-content: center;
-    height: var(--height-content);
 
     .heading {
         color: var(--color-danger);

@@ -7,7 +7,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import GitRevisionPlugin from 'git-revision-webpack-plugin';
-import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
+// import StylishPlugin from 'eslint/lib/cli-engine/formatters/stylish';
 import postcssPresetEnv from 'postcss-preset-env';
 import postcssNested from 'postcss-nested';
 import postcssNormalize from 'postcss-normalize';
@@ -27,6 +27,7 @@ const appBase = process.cwd();
 const eslintFile = path.resolve(appBase, '.eslintrc-loader.js');
 const appSrc = path.resolve(appBase, 'src/');
 const appDist = path.resolve(appBase, 'build/');
+const appCache = path.resolve(appBase, 'build-dev-cache/');
 const appIndexJs = path.resolve(appBase, 'src/index.tsx');
 const appIndexHtml = path.resolve(appBase, 'public/index.html');
 const appFavicon = path.resolve(appBase, 'public/favicon.ico');
@@ -49,8 +50,8 @@ module.exports = (env) => {
             path: appDist,
             publicPath: PUBLIC_PATH,
             sourceMapFilename: 'sourcemaps/[file].map',
-            chunkFilename: 'js/[name].[hash].js',
-            filename: 'js/[name].[hash].js',
+            chunkFilename: 'js/[name].js',
+            filename: 'js/[name].js',
             pathinfo: false,
         },
 
@@ -61,7 +62,7 @@ module.exports = (env) => {
 
         mode: 'development',
 
-        devtool: 'cheap-module-eval-source-map',
+        devtool: 'eval-cheap-module-source-map',
 
         node: {
             fs: 'empty',
@@ -71,6 +72,7 @@ module.exports = (env) => {
             hints: 'warning',
         },
 
+        /*
         stats: {
             assets: true,
             colors: true,
@@ -78,6 +80,7 @@ module.exports = (env) => {
             errorDetails: true,
             hash: true,
         },
+        */
 
         devServer: {
             host: '0.0.0.0',
@@ -104,10 +107,12 @@ module.exports = (env) => {
                         {
                             loader: require.resolve('eslint-loader'),
                             options: {
+                                // cache: true,
                                 configFile: eslintFile,
+                                failOnError: true,
                                 // NOTE: adding this because eslint 6 cannot find this
                                 // https://github.com/webpack-contrib/eslint-loader/issues/271
-                                formatter: StylishPlugin,
+                                // formatter: StylishPlugin,
                             },
                         },
                     ],
@@ -115,14 +120,7 @@ module.exports = (env) => {
                 {
                     test: /\.(html)$/,
                     use: [
-                        {
-                            loader: require.resolve('html-loader'),
-                            /*
-                            options: {
-                                attrs: [':data-src'],
-                            },
-                            */
-                        },
+                        require.resolve('html-loader'),
                     ],
                 },
                 {
@@ -131,12 +129,14 @@ module.exports = (env) => {
                     use: [
                         require.resolve('style-loader'),
                         {
+                            // NOTE: we may need to use postcss-modules instead of css-loader
                             loader: require.resolve('css-loader'),
                             options: {
                                 importLoaders: 1,
                                 modules: {
                                     localIdentName: '[name]_[local]_[hash:base64]',
                                 },
+                                esModule: true,
                                 localsConvention: 'camelCaseOnly',
                                 sourceMap: true,
                             },
@@ -161,7 +161,7 @@ module.exports = (env) => {
                         {
                             loader: require.resolve('file-loader'),
                             options: {
-                                name: 'assets/[hash].[ext]',
+                                name: 'assets/[name].[ext]',
                             },
                         },
                     ],
@@ -180,8 +180,6 @@ module.exports = (env) => {
                 allowAsyncCycles: false,
                 cwd: appBase,
             }),
-            // Remove build folder anyway
-            new CleanWebpackPlugin(),
             new StyleLintPlugin({
                 files: ['**/*.css'],
                 context: appSrc,

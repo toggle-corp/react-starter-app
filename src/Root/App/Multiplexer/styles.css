@@ -1,6 +1,9 @@
 .multiplexer {
     display: flex;
+    position: relative;
     flex-direction: column;
+    z-index: auto;
+    background-color: #f5f5f5;
     width: 100vw;
     height: 100vh;
 
@@ -8,9 +11,18 @@
         flex-shrink: 0;
     }
 
-    .view {
+    .page {
+        position: relative;
+        align-items: center;
         flex-grow: 1;
-        padding: var(--spacing-large);
+        justify-content: center;
+        overflow: auto;
+        text-align: center;
+    }
+
+    .view {
+        position: relative;
+        flex-grow: 1;
         overflow: auto;
     }
 
